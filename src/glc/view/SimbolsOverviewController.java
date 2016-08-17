@@ -7,13 +7,13 @@ package glc.view;
 
 import glc.MainTcomp;
 import glc.model.Simbols;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -77,6 +77,7 @@ public class SimbolsOverviewController {
     ArrayList listNotSimbols = new ArrayList();        
     ArrayList resultItens = new ArrayList();
 
+        ArrayList arrRight = new ArrayList();
 
     String vContextGLC;
     String vContextGrammar;
@@ -218,12 +219,11 @@ public class SimbolsOverviewController {
             String valuesNotTerminal = mainTcomp.getSimbolsData().get(i).getnotTerminalName();
             
             if (!listSimbols.contains(valuesNotTerminal)){  
-                listSimbols.add(valuesNotTerminal);   
+                listSimbols.add(valuesNotTerminal);  
             }
             
             if(!listSimbols.contains(valuesTerminal)){
-                listSimbols.add(valuesTerminal);
-                listNotSimbols.add(valuesTerminal);   
+                listSimbols.add(valuesTerminal);  
             }
             
             if(!listInitial.contains(valuesNotTerminal) && Character.isUpperCase(valuesNotTerminal.charAt(0))){
@@ -243,6 +243,7 @@ public class SimbolsOverviewController {
     @FXML
     private void buttonAddGLC() {
         
+        String listRight = "";
         String vRight = "";
         String vLeft = "";
         
@@ -263,10 +264,13 @@ public class SimbolsOverviewController {
 
             for (Object list : listRulesGLC) {
                 vRight += "" + list.toString() + ",";
+                listRight += "" + list.toString() + "";
+                arrRight.add(listRight);
             }
 
             for (Object listV : arrVariable) {
                 vLeft += "" + listV.toString() + "";
+                
             }
             
             String lastStrRight = vRight.substring(0, vRight.length() - 1);
@@ -317,7 +321,7 @@ public class SimbolsOverviewController {
         
         vContextGrammar = "G = (V,Σ,R,S) \n";
         vContextGrammar += "V = " +  comboVariable.getItems().toString() + "\n";
-        vContextGrammar += "Σ = " + listNotSimbols  + "\n";
+        vContextGrammar += "Σ = " + arrRight.toString()  + "\n";
         vContextGrammar += "R = {"+ rules  +"}\n";
         vContextGrammar += "S = " + comboInitial.getItems().toString();
                 
@@ -330,15 +334,32 @@ public class SimbolsOverviewController {
         CYK cyk = new CYK(resultItens, inputSequence.getText());
         
         if (cyk.validateChain(inputSequence.getText())){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            
             alert.initOwner(mainTcomp.getPrimaryStage());
-            alert.setTitle("Validação - Cadeia");
-            alert.setHeaderText("A cadeia digitada é VÁLIDA");         
-            alert.showAndWait();
+            alert.setTitle("Validação");
+            alert.setHeaderText("A cadeia digitada é VÁLIDA"); 
+
+            ButtonType buttonTree = new ButtonType("Árvore Sintática");
+            ButtonType buttonCancel = new ButtonType("Ok", ButtonData.CANCEL_CLOSE);
+            
+            alert.getButtonTypes().setAll(buttonTree, buttonCancel);
+            
+            Optional<ButtonType> result = alert.showAndWait();
+            
+             if (result.get() == buttonTree) {
+                // ... user chose "Three"
+            } else {
+                // ... user chose CANCEL or closed the dialog
+            }
+
         }else{
+            
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            
             alert.initOwner(mainTcomp.getPrimaryStage());
-            alert.setTitle("Validação -Cadeia VÁLIDA Cadeia");
+            alert.setTitle("Validação");
             alert.setHeaderText("A cadeia digitada é INVÁLIDA");  
             alert.setContentText("Por favor, digite uma cadeia válida.");          
             alert.showAndWait();

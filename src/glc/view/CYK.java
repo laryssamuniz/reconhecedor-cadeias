@@ -118,4 +118,6 @@ public class CYK {
       if (table[0][length - 1].contains(vInicial)){return true;}
       return false;
    }
+    
+    
 }
