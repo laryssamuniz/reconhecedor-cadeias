@@ -262,11 +262,11 @@ public class SimbolsOverviewController {
             listRulesGLC.addAll(arrSimbols);
 
             for (Object list : listRulesGLC) {
-                vRight += "" + list.toString() + "|";
+                vRight += "" + list.toString() + ",";
             }
 
             for (Object listV : arrVariable) {
-                vLeft += " " + listV.toString() + " ";
+                vLeft += "" + listV.toString() + "";
             }
             
             String lastStrRight = vRight.substring(0, vRight.length() - 1);
@@ -287,7 +287,7 @@ public class SimbolsOverviewController {
         TreeItem item = new TreeItem("Rules");
         
         listContextGLC.add(vContextGLC);
-         
+                
         for (int i = 0; i < listContextGLC.size(); i++) {
             
             TreeItem level = new TreeItem(listContextGLC.get(i).toString());
@@ -297,7 +297,7 @@ public class SimbolsOverviewController {
                 item.getChildren().add(level);
                 item.setExpanded(true);
                 boxRules.setRoot(item);
-                listItens.add(level.getValue());
+                listItens.add(level.getValue());                
             }
         }
         
@@ -305,32 +305,66 @@ public class SimbolsOverviewController {
         listRulesGLC.clear();
         
         for (Object itens : listItens) {
+            
             if(!resultItens.contains(itens)){
-                String a = itens + "\n";
-                resultItens.add(a);
+                resultItens.add(itens);
             }
         }
         
         for (int i = 0; i < resultItens.size(); i++) {
-            rules += resultItens.get(i).toString()  + " ";
+            rules += resultItens.get(i).toString()  + "\n";
         }
         
         vContextGrammar = "G = (V,Σ,R,S) \n";
         vContextGrammar += "V = " +  comboVariable.getItems().toString() + "\n";
         vContextGrammar += "Σ = " + listNotSimbols  + "\n";
-        vContextGrammar += "R = {" + rules  + "}\n";
+        vContextGrammar += "R = {"+ rules  +"}\n";
         vContextGrammar += "S = " + comboInitial.getItems().toString();
                 
-        textGrammar.setText(vContextGrammar);
-        
-    }
-    
+        textGrammar.setText(vContextGrammar);   
+    }    
     
     @FXML
     private void buttonGenerate() {
         
-//        CYK algorithm = new CYK(resultItens, inputSequence.getText());
+        CYK cyk = new CYK(resultItens, inputSequence.getText());
         
+        if (cyk.validateChain(inputSequence.getText())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initOwner(mainTcomp.getPrimaryStage());
+            alert.setTitle("Validação - Cadeia");
+            alert.setHeaderText("A cadeia digitada é VÁLIDA");         
+            alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainTcomp.getPrimaryStage());
+            alert.setTitle("Validação -Cadeia VÁLIDA Cadeia");
+            alert.setHeaderText("A cadeia digitada é INVÁLIDA");  
+            alert.setContentText("Por favor, digite uma cadeia válida.");          
+            alert.showAndWait();
+        }
+        
+//        ArrayList listGrammar = new ArrayList();
+//        ArrayList listTerminals = new ArrayList();
+//        ArrayList listVariables = new ArrayList();
+//        
+//        int countList = resultItens.size();
+//        
+//        for (Object object: resultItens) {
+//            
+//            String[] variables = object.toString().split("->");
+//                        
+//            if(!listVariables.contains(variables[0])){
+//                listVariables.add(variables[0]);
+//            }
+//
+//            String terminals[] = variables[1].split("[|]");
+//
+//            for (String t : terminals) {
+//                String term = t.replace(";", "");
+//                listTerminals.add(term);
+//            }            
+//        }
     }   
     
 }

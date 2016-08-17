@@ -47,8 +47,10 @@ public class MainTcomp extends Application {
             new Simbols("ADJ_AT", "a"),
             new Simbols("ADJ_AT", "no"),
             new Simbols("ADJ_AT", "pt_adj_at"),
-            new Simbols("S", "ab"),
-            new Simbols("S", "aaB")
+            new Simbols("S", "AB"),
+            new Simbols("S", "B"),
+            new Simbols("A", "a"),
+            new Simbols("B", "b")
         ); 
     
     /**
