@@ -7,7 +7,7 @@
 
 <AnchorPane prefHeight="363.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="glc.view.SimbolsOverviewController">
    <children>
-      <TabPane prefHeight="363.0" prefWidth="628.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabPaneRC" prefHeight="363.0" prefWidth="628.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Alfabetos">
                <content>
@@ -86,6 +86,14 @@
                      </children>
                   </AnchorPane>
                </content>
+            </Tab>
+            <Tab fx:id="tabTree" text="Arvore Sintatica">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TreeView fx:id="treeSyntactical" layoutX="3.0" prefHeight="330.0" prefWidth="628.0" />
+                     </children></AnchorPane>
+              </content>
             </Tab>
         </tabs>
       </TabPane>

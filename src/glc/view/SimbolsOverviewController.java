@@ -12,10 +12,13 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -29,10 +32,7 @@ import javafx.scene.control.TreeView;
  * @author laryssamuniz
  */
 public class SimbolsOverviewController {
-
-    @FXML
-    private TextField inputTranstion;
-
+    
     @FXML
     private TableView<Simbols> simbolsTable;
 
@@ -41,43 +41,56 @@ public class SimbolsOverviewController {
 
     @FXML
     private Label terminalNameLabel;
+    
+    @FXML
+    private TabPane tabPaneRC;
+    
+    @FXML
+    private ComboBox<String> comboInitial;
+
+    @FXML
+    private TableColumn<Simbols, String> terminalNameColumn;
+    
+    @FXML
+    private TreeView<String> boxRules;
+
+    @FXML
+    private Label notTerminalNameLabel;
+
+    @FXML
+    private ComboBox<String> comboSimbols;
+
+    @FXML
+    private ComboBox<String> comboVariable;
 
     @FXML
     private TextField inputSequence;
 
     @FXML
-    private ComboBox<String> comboVariable;
-    
+    private Tab tabTree;
+
     @FXML
-    private ComboBox<String> comboSimbols;
-    
+    private Button infoButton;
+
     @FXML
     private TextArea textGrammar;
 
     @FXML
-    private TableColumn<Simbols, String> terminalNameColumn;
-
-    @FXML
-    private ComboBox<String> comboInitial;
-
-    @FXML
-    private Label notTerminalNameLabel;
+    private TextArea boxGrammar;
     
     @FXML
-    private TreeView<String> boxRules;
+    private TreeView<String> treeSyntactical;
+
     
     // Reference to the main application.
     private MainTcomp mainTcomp;
-        
-    @FXML
-    private TextArea boxGrammar;
     
     ArrayList listRulesGLC = new ArrayList();
     ArrayList listContextGLC = new ArrayList();        
     ArrayList listNotSimbols = new ArrayList();        
     ArrayList resultItens = new ArrayList();
-
-        ArrayList arrRight = new ArrayList();
+    ArrayList arrRight = new ArrayList();
+    ArrayList arrLeft = new ArrayList();
 
     String vContextGLC;
     String vContextGrammar;
@@ -270,7 +283,7 @@ public class SimbolsOverviewController {
 
             for (Object listV : arrVariable) {
                 vLeft += "" + listV.toString() + "";
-                
+                arrLeft.add(vLeft);
             }
             
             String lastStrRight = vRight.substring(0, vRight.length() - 1);
@@ -320,10 +333,10 @@ public class SimbolsOverviewController {
         }
         
         vContextGrammar = "G = (V,Σ,R,S) \n";
-        vContextGrammar += "V = " +  comboVariable.getItems().toString() + "\n";
+        vContextGrammar += "V = " + arrLeft.toString() + "\n";
         vContextGrammar += "Σ = " + arrRight.toString()  + "\n";
         vContextGrammar += "R = {"+ rules  +"}\n";
-        vContextGrammar += "S = " + comboInitial.getItems().toString();
+        vContextGrammar += "S = " + comboInitial.getSelectionModel().getSelectedItem();
                 
         textGrammar.setText(vContextGrammar);   
     }    
@@ -345,13 +358,23 @@ public class SimbolsOverviewController {
             ButtonType buttonCancel = new ButtonType("Ok", ButtonData.CANCEL_CLOSE);
             
             alert.getButtonTypes().setAll(buttonTree, buttonCancel);
-            
             Optional<ButtonType> result = alert.showAndWait();
             
-             if (result.get() == buttonTree) {
-                // ... user chose "Three"
-            } else {
-                // ... user chose CANCEL or closed the dialog
+            if (result.get() == buttonTree) {
+                tabPaneRC.getSelectionModel().select(tabTree);
+                
+                TreeItem item = new TreeItem(arrLeft.get(0).toString());
+                
+                for (int i = 0; i < arrRight.size(); i++) {
+                    
+                    TreeItem simbols = new TreeItem(arrRight.get(i).toString());
+                    simbols.setExpanded(true);
+                    item.getChildren().add(simbols);
+                    item.setExpanded(true);
+                    treeSyntactical.setRoot(item);
+                    
+                }
+                           
             }
 
         }else{
